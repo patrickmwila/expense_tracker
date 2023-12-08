@@ -32,7 +32,7 @@ function App() {
     let total = 0;
 
     filteredData.forEach((data) => {
-      total += parseFloat(data.amount);
+      total += data.amount;
     });
 
     setTotalAmount(total);

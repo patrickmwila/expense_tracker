@@ -2,7 +2,7 @@ import { MouseEvent } from 'react';
 
 export interface ExpenseItem {
   description: string;
-  amount: string;
+  amount: number;
   category: string;
 }
 
