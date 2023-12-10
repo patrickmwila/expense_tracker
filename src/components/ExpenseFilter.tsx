@@ -1,30 +1,23 @@
-import { ChangeEvent } from 'react';
-
+import categories from './categories';
 interface Props {
-  selectItems: string[];
-  onFilterChange: (selectedOption: string) => void;
+  onSelectedFilter: (selectedOption: string) => void;
 }
 
-const ExpenseFilter = ({ selectItems, onFilterChange }: Props) => {
-  // === functions === //
-  const handleFiltering = (event: ChangeEvent<HTMLSelectElement>) => {
-    const selectedOption = event.target.value;
-    onFilterChange(selectedOption);
-  };
-
+const ExpenseFilter = ({ onSelectedFilter }: Props) => {
   return (
     <>
-      <form>
-        <div className="mb-3"></div>
-
-        <select className="form-select" onChange={handleFiltering}>
-          {selectItems.map((selectItem, index) => (
-            <option key={index} value={selectItem}>
-              {selectItem}
+      <div className="mt-3">
+        <select
+          className="form-select"
+          onChange={(event) => onSelectedFilter(event.target.value)}
+        >
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
             </option>
           ))}
         </select>
-      </form>
+      </div>
     </>
   );
 };

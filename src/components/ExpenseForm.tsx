@@ -1,6 +1,7 @@
-import { useForm, FieldValues } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import categories from './categories';
 
 // === define validation rules strudture === //
 const schema = z.object({
@@ -8,17 +9,9 @@ const schema = z.object({
     .string()
     .min(3, { message: 'Description should be atleast 3 characters.' }),
   amount: z
-    .string()
-    .refine(
-      (val) => {
-        const parsed = parseFloat(val);
-        return !isNaN(parsed) && parsed >= 1;
-      },
-      {
-        message: 'Amount must be a number greater than or equal to 1.',
-      }
-    )
-    .transform((val) => parseFloat(val)),
+    .number({ invalid_type_error: 'Amount is required' })
+    .min(0.01)
+    .max(100_000),
   category: z.string().refine((val) => val !== 'All categories', {
     message: 'Category is required.',
   }),
@@ -27,11 +20,10 @@ type FormData = z.infer<typeof schema>;
 
 // === interface == //
 interface Props {
-  selectItems: string[];
   onData: (data: object) => void;
 }
 
-const ExpenseForm = ({ selectItems, onData }: Props) => {
+const ExpenseForm = ({ onData }: Props) => {
   // === hooks === //
   const {
     handleSubmit,
@@ -40,14 +32,13 @@ const ExpenseForm = ({ selectItems, onData }: Props) => {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  // === custom functions === //
-  const onSubmit = (data: FieldValues) => {
-    onData(data);
-    reset();
-  };
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={handleSubmit((data) => {
+        onData(data);
+        reset();
+      })}
+    >
       <div className="mb-3">
         <label htmlFor="description" className="form-label">
           Description
@@ -68,7 +59,7 @@ const ExpenseForm = ({ selectItems, onData }: Props) => {
           Amount
         </label>
         <input
-          {...register('amount')}
+          {...register('amount', { valueAsNumber: true })}
           id="amount"
           type="number"
           className="form-control"
@@ -84,9 +75,9 @@ const ExpenseForm = ({ selectItems, onData }: Props) => {
         </label>
 
         <select {...register('category')} id="category" className="form-select">
-          {selectItems.map((selectItem, index) => (
-            <option key={index} value={selectItem}>
-              {selectItem !== 'All categories' && selectItem}
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category !== 'All categories' && category}
             </option>
           ))}
         </select>

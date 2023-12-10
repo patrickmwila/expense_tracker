@@ -1,6 +1,5 @@
-import { MouseEvent } from 'react';
-
 export interface ExpenseItem {
+  id: number;
   description: string;
   amount: number;
   category: string;
@@ -8,16 +7,11 @@ export interface ExpenseItem {
 
 interface Props {
   expenseList: ExpenseItem[];
-  totalAmount: number;
-  onDelete: (index: number) => void;
+  onDelete: (id: number) => void;
 }
 
-const ExpenseList = ({ expenseList, totalAmount, onDelete }: Props) => {
-  // === custom functions === //
-  const handleOnClick = (event: MouseEvent) => {
-    const index = Number((event.currentTarget as HTMLButtonElement).value);
-    onDelete(index);
-  };
+const ExpenseList = ({ expenseList, onDelete }: Props) => {
+  if (expenseList.length === 0) return null;
 
   return (
     <>
@@ -33,29 +27,36 @@ const ExpenseList = ({ expenseList, totalAmount, onDelete }: Props) => {
           </thead>
 
           <tbody>
-            {expenseList.map((itemObj, index) => (
-              <tr key={index}>
-                <td>{itemObj.description}</td>
-                <td>K{itemObj.amount}</td>
-                <td>{itemObj.category}</td>
+            {expenseList.map((expense) => (
+              <tr key={expense.id}>
+                <td>{expense.description}</td>
+                <td>K{expense.amount}</td>
+                <td>{expense.category}</td>
                 <td>
                   <button
                     className="btn btn-outline-danger"
-                    value={index}
-                    onClick={handleOnClick}
+                    onClick={() => onDelete(expense.id)}
                   >
                     Delete
                   </button>
                 </td>
               </tr>
             ))}
+          </tbody>
+
+          <tfoot>
             <tr>
               <td>Total</td>
-              <td>K{totalAmount}</td>
+              <td>
+                K
+                {expenseList
+                  .reduce((acc, expense) => expense.amount + acc, 0)
+                  .toFixed(2)}
+              </td>
               <td></td>
               <td></td>
             </tr>
-          </tbody>
+          </tfoot>
         </table>
       </div>
     </>
