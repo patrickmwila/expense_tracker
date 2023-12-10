@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react';
-import ExpenseForm from './components/ExpenseForm';
-import ExpenseFilter from './components/ExpenseFilter';
-import ExpenseList, { ExpenseItem } from './components/ExpenseList';
+import { useState, useEffect } from "react";
+import ExpenseForm from "./components/ExpenseForm";
+import ExpenseFilter from "./components/ExpenseFilter";
+import ExpenseList, { ExpenseItem } from "./components/ExpenseList";
 
 function App() {
-  //== hooks == //
+  // === hooks === //
   const [expenseData, setExpenseData] = useState({});
   const [allExpenseData, setAllExpenseData] = useState<ExpenseItem[]>([]);
   const [filteredData, setFilteredData] = useState<ExpenseItem[]>([]);
-  const [filteredOption, setFilteredOption] = useState('All categories');
+  const [filteredOption, setFilteredOption] = useState("All categories");
   const [totalAmount, setTotalAmount] = useState(0);
 
-  // == variables == //
+  // === variables === //
   const categories = [
-    'All categories',
-    'Groceries',
-    'Utilities',
-    'Entertainment',
+    "All categories",
+    "Groceries",
+    "Utilities",
+    "Entertainment",
   ];
 
-  // == functions == //
+  // === functions === //
   const handleData = (data: object) => {
     setExpenseData(data);
   };
@@ -42,15 +42,13 @@ function App() {
     // Use the setFilteredData function to update the state
     setFilteredData((prevData) => {
       // Filter out the item with the specified index from the previous data
-      const updatedData = prevData.filter(
-        (item, index) => index !== itemToDelete
-      );
+      const updatedData = prevData.filter((_, index) => index !== itemToDelete);
       setAllExpenseData(updatedData);
       return updatedData;
     });
   };
 
-  // == misc hooks == //
+  // === misc hooks === //
   useEffect(() => {
     // Update the array whenever expenseData changes
     if (Object.keys(expenseData).length > 0) {
@@ -63,13 +61,13 @@ function App() {
 
   // Filter allExpenseData based on filteredOption
   useEffect(() => {
-    if (filteredOption === 'All categories') {
+    if (filteredOption === "All categories") {
       // If 'All categories' selected, set filteredData to allExpenseData
       setFilteredData(allExpenseData);
       calculateTotalAmount(allExpenseData);
     } else {
       const filteredItems = allExpenseData.filter(
-        (item) => item.category === filteredOption
+        (item) => item.category === filteredOption,
       );
       setFilteredData(filteredItems);
       calculateTotalAmount(filteredItems);

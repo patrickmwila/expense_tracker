@@ -6,7 +6,7 @@ interface Props {
 }
 
 const ExpenseFilter = ({ selectItems, onFilterChange }: Props) => {
-  // == functions == //
+  // === functions === //
   const handleFiltering = (event: ChangeEvent<HTMLSelectElement>) => {
     const selectedOption = event.target.value;
     onFilterChange(selectedOption);

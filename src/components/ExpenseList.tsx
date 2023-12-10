@@ -13,7 +13,7 @@ interface Props {
 }
 
 const ExpenseList = ({ expenseList, totalAmount, onDelete }: Props) => {
-  // == custom functions == //
+  // === custom functions === //
   const handleOnClick = (event: MouseEvent) => {
     const index = Number((event.currentTarget as HTMLButtonElement).value);
     onDelete(index);
